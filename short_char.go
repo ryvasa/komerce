@@ -18,6 +18,7 @@ func processString(input string) (string, string) {
 		if !unicode.IsLetter(char) {
 			continue
 		}
+
 		if _, exists := order[char]; !exists {
 			order[char] = i
 		}
@@ -29,7 +30,8 @@ func processString(input string) (string, string) {
 		}
 	}
 
-	fmt.Println(order)
+	// fmt.Println(order)
+
 	sort.SliceStable(vowelChar, func(i, j int) bool {
 		return order[vowelChar[i]] < order[vowelChar[j]]
 	})
@@ -44,9 +46,17 @@ func processString(input string) (string, string) {
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("Input one line of words (S): ")
-	input, _ := reader.ReadString('\n')
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error reading input:", err)
+		return
+	}
 	input = strings.TrimSpace(input)
 
+	if input == "" {
+		fmt.Println("Error invalid input")
+		return
+	}
 	vowels, consonants := processString(input)
 	fmt.Println("Vowel Characters:", vowels)
 	fmt.Println("Consonant Characters:", consonants)

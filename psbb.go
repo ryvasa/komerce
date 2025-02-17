@@ -1,18 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 func calculateBuses(n int, families []int) int {
-	if len(families) != n {
-		fmt.Println("The number of families does not match the input.")
-		return -1
-	}
-
 	sort.Ints(families)
-	fmt.Println(families)
 
 	buses := 0
 	left, right := 0, n-1
@@ -34,14 +32,29 @@ func main() {
 	fmt.Print("Input the number of families : ")
 	fmt.Scan(&n)
 
+	fmt.Println("Input the number of members in the family (separated by a space) : ")
+
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+
+	familyStrings := strings.Fields(input)
+
+	if len(familyStrings) != n {
+		fmt.Println("Input must be equal with count of family")
+		return
+	}
+
 	families := make([]int, n)
-	fmt.Println("Input the number of members in the family ( separated by a space) : ")
 	for i := 0; i < n; i++ {
-		fmt.Scan(&families[i])
+		num, err := strconv.Atoi(familyStrings[i])
+		if err != nil {
+			fmt.Println("Invalid number:", familyStrings[i])
+			return
+		}
+		families[i] = num
 	}
 
 	result := calculateBuses(n, families)
-	if result != -1 {
-		fmt.Println("Minimum bus required is :", result)
-	}
+	fmt.Println("Minimum bus required is :", result)
 }
